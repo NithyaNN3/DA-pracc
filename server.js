@@ -22,7 +22,7 @@ async function connectToDatabase() {
   }
 }
 
-const db = client.db("Week10");
+const db = client.db("sample_airbnb");
 
 connectToDatabase();
 
@@ -38,7 +38,7 @@ app.get('/add', (req, res) => {
 // API endpoint
 app.get('/api/data', async (req, res, next) => {
   try {
-    const data = await db.collection('Movies').find().toArray();
+    const data = await db.collection('listingsAndReviews').find().toArray();
     res.json(data);
   } catch (error) {
     console.error('Failed to fetch data from MongoDB', error);
@@ -98,8 +98,7 @@ if (isNaN(dirNumb)) {
   return;
 }
     // Insert the data into MongoDB
-    //const result = await db.collection('Movie').insertOne({mvNumb, age });
-    const result = await db.collection('Movies').insertOne({ mvNumb, mvTitle, yrMade, mvType, Crit, MPAA, Noms, Awrd, dirNumb });
+    const result = await db.collection('listingsAndReviews').insertOne({ mvNumb, mvTitle, yrMade, mvType, Crit, MPAA, Noms, Awrd, dirNumb });
 
     res.status(201).json({ id: result.insertedId });
   } catch (error) {
