@@ -38,7 +38,23 @@ app.get('/add', (req, res) => {
 // API endpoint
 app.get('/api/data', async (req, res, next) => {
   try {
-    const data = await db.collection('listingsAndReviews').find().limit(20).toArray();
+    const { location, property_type, bedrooms } = req.query;
+
+    // Build the query object based on available filters
+    const query = {};
+    if (location) query['address.market'] = location; 
+    if (property_type) query.property_type = property_type;
+    if (bedrooms) query.bedrooms = parseInt(bedrooms);
+
+    // Set Cache-Control header to prevent caching
+    res.set('Cache-Control', 'no-store');
+
+    // Use the query object in the .find() method
+    const data = await db.collection('listingsAndReviews')
+      .find(query)
+      .toArray();
+
+    // Send the data response
     res.json(data);
   } catch (error) {
     console.error('Failed to fetch data from MongoDB', error);
