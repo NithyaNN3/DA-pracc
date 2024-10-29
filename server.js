@@ -38,10 +38,34 @@ app.get('/add', (req, res) => {
 // API endpoint
 app.get('/api/data', async (req, res, next) => {
   try {
-    const data = await db.collection('listingsAndReviews').find().toArray();
+    const data = await db.collection('listingsAndReviews').find().limit(20).toArray();
     res.json(data);
   } catch (error) {
     console.error('Failed to fetch data from MongoDB', error);
+    next(error);
+  }
+});
+
+// API endpoint to dynamically fetch property types 
+app.get('/api/property-types', async (req, res, next) => {
+  try {
+    const propertyTypes = await db.collection('listingsAndReviews')
+      .distinct('property_type'); // Get unique property types
+    res.json(propertyTypes);
+  } catch (error) {
+    console.error('Failed to fetch property types from MongoDB', error);
+    next(error);
+  }
+});
+
+// API endpoint to dynamically fetch property types 
+app.get('/api/no-of-bedrooms', async (req, res, next) => {
+  try {
+    const propertyTypes = await db.collection('listingsAndReviews')
+      .distinct('bedrooms'); // Get unique property types
+    res.json(propertyTypes);
+  } catch (error) {
+    console.error('Failed to fetch property types from MongoDB', error);
     next(error);
   }
 });

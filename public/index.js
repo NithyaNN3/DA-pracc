@@ -97,6 +97,40 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(error => console.error('Failed to fetch data:', error));
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  // Property type dropdown
+  fetch('/api/property-types')
+    .then(response => response.json())
+    .then(propertyTypes => {
+      const propertyTypeSelect = document.getElementById('property-type');
+      
+      propertyTypes.forEach(type => {
+        const option = document.createElement('option');
+        option.value = type;
+        option.textContent = type;
+        propertyTypeSelect.appendChild(option);
+      });
+    })
+    .catch(error => console.error('Failed to fetch property types:', error));
 
+  fetchData(); 
+});
 
-    
+document.addEventListener('DOMContentLoaded', () => {
+  //No. of bedrooms dropdown
+  fetch('/api/no-of-bedrooms')
+    .then(response => response.json())
+    .then(propertyTypes => {
+      const propertyTypeSelect = document.getElementById('bedrooms');
+      
+      propertyTypes.forEach(type => {
+        const option = document.createElement('option');
+        option.value = type;
+        option.textContent = type;
+        propertyTypeSelect.appendChild(option);
+      });
+    })
+    .catch(error => console.error('Failed to fetch no. of bedrooms:', error));
+
+  fetchData(); 
+});
