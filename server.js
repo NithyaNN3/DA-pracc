@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const { MongoClient } = require('mongodb');
 
@@ -6,7 +8,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-const uri = "mongodb+srv://nithyaniranjani:Lelouch34@databaseapplications.go0z7.mongodb.net/";
+const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
 
 // Parse JSON bodies (as sent by API clients)
@@ -139,7 +141,7 @@ app.use((err, req, res, next) => {
 });
 
 // Start the server
-const PORT = 3000;
+const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
