@@ -86,63 +86,45 @@ app.get('/api/no-of-bedrooms', async (req, res, next) => {
   }
 });
 
-// API endpoint for adding data
-app.post('/api/data', async (req, res, next) => {
+const { ObjectId } = require('mongodb'); // Ensure ObjectId is imported
+
+// Helper function to generate a datetime-based booking_id
+function generateBookingId() {
+  const now = new Date();
+  return now.toISOString().replace(/[-:.TZ]/g, ''); // Formats as 'YYYYMMDDHHMMSSmmm'
+}
+
+// API endpoint to add a booking to a specific listing
+app.post('/api/data/bookings/:listingId', async (req, res, next) => {
   try {
-    // const { mvNumb, age } = req.body;
-    const { mvNumb, mvTitle, yrMade, mvType, Crit, MPAA, Noms, Awrd, dirNumb } = req.body;
+    const { listingId } = req.params;
+    const { booking } = req.body;
 
-    // Validate that all data are present
-    /*
-    if (!mvNumb || !age) {
-      res.status(400).json({ error: 'Please provide both name and age' });
-      return;
+    console.log('Received booking for listing ID:', listingId);
+    console.log('Booking data:', booking);
+
+    // Generate a datetime-based booking_id
+    const serverGeneratedBooking = {
+      ...booking,
+      booking_id: generateBookingId()
+    };
+
+    // Use listingId as a string in the MongoDB query
+    const result = await db.collection('listingsAndReviews').updateOne(
+      { _id: listingId },  // Do not convert listingId to ObjectId
+      { $push: { bookings: serverGeneratedBooking } }
+    );
+
+    if (result.modifiedCount === 0) {
+      console.error('Listing not found for ID:', listingId);
+      return res.status(404).json({ error: 'Listing not found' });
     }
 
-    // Validate that the age is a number
-    if (isNaN(age)) {
-      res.status(400).json({ error: 'Age must be a number' });
-      return;
-    }
-*/
-
-
-if (!mvNumb || !mvTitle || !yrMade || !mvType || !Crit || !MPAA || !Noms || !Awrd || !dirNumb) {
-  res.status(400).json({ error: 'Please provide all information' });
-  return;
-}
-
-// Validate that the age is a number
-if (isNaN(mvNumb)) {
-  res.status(400).json({ error: 'Movie Number must be a number' });
-  return;
-}
-if (isNaN(yrMade)) {
-  res.status(400).json({ error: 'Year Made must be a number' });
-  return;
-}
-if (isNaN(Crit)) {
-  res.status(400).json({ error: 'No. Crits must be a number' });
-  return;
-}
-if (isNaN(Noms)) {
-  res.status(400).json({ error: 'No. Nominations must be a number' });
-  return;
-}
-if (isNaN(Awrd)) {
-  res.status(400).json({ error: 'No. Awards must be a number' });
-  return;
-}
-if (isNaN(dirNumb)) {
-  res.status(400).json({ error: 'Director Number Awards must be a number' });
-  return;
-}
-    // Insert the data into MongoDB
-    const result = await db.collection('listingsAndReviews').insertOne({ mvNumb, mvTitle, yrMade, mvType, Crit, MPAA, Noms, Awrd, dirNumb });
-
-    res.status(201).json({ id: result.insertedId });
+    console.log('Booking added successfully');
+    res.status(200).json({ message: 'Booking added successfully' });
   } catch (error) {
-    next(error);
+    console.error('Failed to add booking:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
