@@ -50,7 +50,7 @@ addForm.addEventListener('submit', async (event) => {
       }
       
       // Redirect to the home page or show a success message after submission
-      window.location.href = '/';
+      window.location.href = '/confirm.html';
     } catch (error) {
       console.error(error);
       document.getElementById('error-message').textContent = "Failed to submit booking. Please try again.";
