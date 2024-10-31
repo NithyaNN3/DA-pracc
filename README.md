@@ -12,7 +12,7 @@
    - Environment variables are stored in the .env file which you can configure to suit the local setup
 2. **Run Application:**
 	- Run nodemon server.js to begin the node server 
-    - The project should be running on the http://localhost:<PORT>/index.html which you can access through the browser
+    - The project should be running on the http://localhost:PORT/index.html which you can access through the browser
 
 ## Contact
 Project by -
