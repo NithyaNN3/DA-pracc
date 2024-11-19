@@ -15,7 +15,7 @@
     - The project should be running on the http://localhost:PORT/index.html which you can access through the browser
 
 ## Contact
-Project by -
+Contact me on -
 Nithya Niranjani Nagaraja
 s4030961@student.rmit.edu.au
 
